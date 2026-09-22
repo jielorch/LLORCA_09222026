@@ -1,4 +1,5 @@
 ﻿using App.Domain.Entities;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -14,5 +15,7 @@ namespace App.Infrastructure.Interface
         DatabaseFacade Database { get; }
         public DbSet<FileRecord> FileRecords { get; }
 
+        Task<int> ExecuteAsync(string storedProcedure, DynamicParameters? parameters, CommandType commandType);
+        Task<IReadOnlyList<T>> QueryAsync<T>(string storedProcedure, DynamicParameters? parameters, CommandType commandType);
     }
 }

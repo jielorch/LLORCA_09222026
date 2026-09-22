@@ -1,5 +1,9 @@
 ﻿using App.Application.Common.Interfaces;
+using App.Domain.Interfaces;
+using App.Infrastructure.Interface;
+using App.Infrastructure.Repositories;
 using App.Infrastructure.Security.Services;
+using App.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,14 +15,18 @@ namespace App.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(options =>
+            service.AddDbContext<AppDbContext>(options =>
                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IApiKeyValidator, ApiKeyValidator>();
+            service.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
-            return services;
+            service.AddScoped<IApiKeyValidator, ApiKeyValidator>();
+            service.AddScoped<IFileRecordRepository, FileRecordRepository>();
+            service.AddScoped<ICsvProcessor, CsvProcessor>();
+
+            return service;
         }
     }
 }

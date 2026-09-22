@@ -24,6 +24,13 @@ namespace App.Infrastructure.Configs
                 .IsRequired();
 
 
+            builder.Property(a => a.Average)
+                .HasColumnType("DECIMAL(12, 2)");
+
+            builder.Property(a => a.ProcessingTime)
+                .HasColumnType("time")
+                .HasDefaultValueSql("CAST(GETDATE() AS TIME)")
+                .ValueGeneratedOnAdd();
 
         }
     }

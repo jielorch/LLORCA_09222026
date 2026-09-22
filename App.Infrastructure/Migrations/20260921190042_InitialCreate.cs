@@ -37,6 +37,9 @@ namespace App.Infrastructure.Migrations
                 column: "PublicId",
                 unique: true)
                 .Annotation("SqlServer:Clustered", false);
+
+
+            ExecuteSql.Scripts(migrationBuilder);
         }
 
         /// <inheritdoc />
