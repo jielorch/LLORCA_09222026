@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace App.Domain.Entities
+namespace App.Application.Features.FileRecords.DTO.Models
 {
-    public class FileRecord
+    public class FileRecordModel
     {
-        public int Id { get; set; }
         public Guid PublicId { get; set; }
-        public string FileName { get; set; } = null!;
+        public string FileName { get; set; } = string.Empty;
         public decimal Average { get; set; }
         public TimeOnly ProcessingTime { get; set; }
     }

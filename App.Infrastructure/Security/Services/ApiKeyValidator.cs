@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
+
 
 namespace App.Infrastructure.Security.Services
 {
@@ -18,7 +20,10 @@ namespace App.Infrastructure.Security.Services
                 return Task.FromResult(false);
             }
 
-            bool isValid = string.Equals(expectedApiKey, apiKey);
+            bool isValid = CryptographicOperations.FixedTimeEquals(
+                               Encoding.UTF8.GetBytes(expectedApiKey),
+                               Encoding.UTF8.GetBytes(apiKey)
+                           );
 
             return Task.FromResult(isValid);
         }
