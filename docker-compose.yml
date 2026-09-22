@@ -1,0 +1,54 @@
+services:
+  # ==========================================
+  # SQL SERVER DATABASE SERVICE
+  # ==========================================
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: filechecker-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SecureP@ssw0rd2024"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - filechecker-network
+    healthcheck:
+      test: ["CMD", "/bin/bash", "-c", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P SecureP@ssw0rd2024 -Q 'SELECT 1' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+  # ==========================================
+  # .NET API APPLICATION SERVICE
+  # ==========================================
+  webapi:
+    image: filechecker:latest
+    container_name: filechecker-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ENABLE_SWAGGER: "true"
+      ASPNETCORE_URLS: "http://+:8080"
+      Authentication__ApiKey: "Your-Super-Secret-Local-Development-Key-12345"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=FileTracker;User Id=sa;Password=SecureP@ssw0rd2024;TrustServerCertificate=True;"
+    depends_on:
+      - sqlserver
+    networks:
+      - filechecker-network
+    restart: on-failure
+
+networks:
+  filechecker-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:

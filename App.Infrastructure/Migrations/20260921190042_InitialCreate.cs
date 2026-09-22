@@ -39,7 +39,7 @@ namespace App.Infrastructure.Migrations
                 .Annotation("SqlServer:Clustered", false);
 
 
-            ExecuteSql.Scripts(migrationBuilder);
+            
         }
 
         /// <inheritdoc />
