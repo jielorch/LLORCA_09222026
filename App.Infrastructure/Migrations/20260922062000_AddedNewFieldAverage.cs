@@ -28,6 +28,8 @@ namespace App.Infrastructure.Migrations
                 type: "DECIMAL(12,2)",
                 nullable: false,
                 defaultValue: 0m);
+
+            ExecuteSql.Scripts(migrationBuilder);
         }
 
         /// <inheritdoc />
